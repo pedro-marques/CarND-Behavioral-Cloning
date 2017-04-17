@@ -74,21 +74,19 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 #import tensorflow as tf
 from keras.backend import tf as ktf
-import tensorflow as tf
 
 model = Sequential()
 
-#resized = tf.image.resize_images(X_train, (64, 64))
-
 # Crop 50 pixels from the top of the image (mainly trees and the sky),
 # 20 pixels from the bottom (hood of the car), 0 from the left and right
-#model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
+model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
+
 # Normalization Layer
 #model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
 model.add(Lambda(lambda x: (x / 127.5) - 1, input_shape=(160,320,3)))
 model.add(Cropping2D(cropping=((50,20), (0,0))))
-#model.add(Lambda(lambda image: ktf.image.resize_images(image, (64,64))))
-#model.add(Lambda(lambda x: (x / 127.5) - 1, input_shape=(160,320,3)))
+
+# Resize the images
 #model.add(Lambda(lambda image: ktf.image.resize_images(image, (64,64))))
 
 # NVIDIA Architecture
@@ -96,14 +94,12 @@ model.add(Cropping2D(cropping=((50,20), (0,0))))
 model.add(Convolution2D(48, 3, 3, border_mode='valid'))
 model.add(Activation('elu'))
 model.add(MaxPooling2D((2, 2), border_mode='valid'))
-#model.add(Convolution2D(24, 5, 5, border_mode='valid'))
 
+model.add(Convolution2D(24, 5, 5, border_mode='valid'))
 model.add(Activation('relu'))
-
 model.add(MaxPooling2D((2, 2), border_mode='valid'))
 
 # 2 3x3 Convolutional Layers
-
 
 # Flatten Layer
 model.add(Flatten())
