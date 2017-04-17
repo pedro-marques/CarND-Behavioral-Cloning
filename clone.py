@@ -84,7 +84,7 @@ model.add(Lambda(lambda x: (x / 127.5) - 1, input_shape=(160,320,3)))
 # Crop 50 pixels from the top of the image (mainly trees and the sky),
 # 20 pixels from the bottom (hood of the car), 0 from the left and right
 #model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
-model.add(Cropping2D(cropping=((50,20), (0,0))))
+model.add(Cropping2D(cropping=((70,25), (1,1))))
 
 # Resize the images
 #model.add(Lambda(lambda image: ktf.image.resize_images(image, (64,64))))
