@@ -106,8 +106,11 @@ model.add(Flatten())
 
 # Fully-connected layer
 model.add(Dense(100))
+model.add(Activation('relu'))
 model.add(Dense(50))
+model.add(Activation('relu'))
 model.add(Dense(10))
+model.add(Activation('relu'))
 model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam') # loss - mean squared error - mean absolute error
