@@ -92,7 +92,7 @@ model.add(Cropping2D(cropping=((50,20), (0,0))))
 # NVIDIA Architecture
 # 3 5x5 Convolutional Layers
 model.add(Convolution2D(48, 3, 3, border_mode='valid'))
-model.add(Activation('elu'))
+model.add(Activation('relu'))
 model.add(MaxPooling2D((2, 2), border_mode='valid'))
 
 model.add(Convolution2D(24, 5, 5, border_mode='valid'))
