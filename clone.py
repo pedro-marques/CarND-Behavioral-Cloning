@@ -69,21 +69,21 @@ print('Labels shape:',y_train.shape)
 
 ## Network Architecture
 from keras.models import Sequential
-from keras.layers.core import Dense, Activation, Flatten, Dropout
-from keras.layers.convolutional import Convolution2D
+from keras.layers.core import Dense, Activation, Flatten, Dropout, Lambda
+from keras.layers.convolutional import Convolution2D,Cropping2D
 from keras.layers.pooling import MaxPooling2D
 #import tensorflow as tf
 from keras.backend import tf as ktf
 
 model = Sequential()
 
-# Crop 50 pixels from the top of the image (mainly trees and the sky),
-# 20 pixels from the bottom (hood of the car), 0 from the left and right
-model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
-
 # Normalization Layer
 #model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
 model.add(Lambda(lambda x: (x / 127.5) - 1, input_shape=(160,320,3)))
+
+# Crop 50 pixels from the top of the image (mainly trees and the sky),
+# 20 pixels from the bottom (hood of the car), 0 from the left and right
+#model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
 model.add(Cropping2D(cropping=((50,20), (0,0))))
 
 # Resize the images
