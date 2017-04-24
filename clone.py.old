@@ -68,49 +68,53 @@ print('Image shape:',X_train.shape)
 print('Labels shape:',y_train.shape)
 
 ## Network Architecture
-
 from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda, Cropping2D, Convolution2D
+from keras.layers.core import Dense, Activation, Flatten, Dropout, Lambda
+from keras.layers.convolutional import Convolution2D,Cropping2D
+from keras.layers.pooling import MaxPooling2D
 #import tensorflow as tf
 from keras.backend import tf as ktf
-import tensorflow as tf
 
 model = Sequential()
 
-#resized = tf.image.resize_images(X_train, (64, 64))
+# Normalization Layer
+#model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
+model.add(Lambda(lambda x: (x / 127.5) - 1, input_shape=(160,320,3)))
 
 # Crop 50 pixels from the top of the image (mainly trees and the sky),
 # 20 pixels from the bottom (hood of the car), 0 from the left and right
 #model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
-# Normalization Layer
-#model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160,320,3)))
-model.add(Lambda(lambda x: (x / 127.5) - 1, input_shape=(160,320,3)))
-model.add(Cropping2D(cropping=((50,20), (0,0))))
-#model.add(Lambda(lambda image: ktf.image.resize_images(image, (64,64))))
-#model.add(Lambda(lambda x: (x / 127.5) - 1, input_shape=(160,320,3)))
+model.add(Cropping2D(cropping=((70,25), (1,1))))
+
+# Resize the images
 #model.add(Lambda(lambda image: ktf.image.resize_images(image, (64,64))))
 
 # NVIDIA Architecture
 # 3 5x5 Convolutional Layers
-model.add(Convolution2D(24,5,5, subsample=(2,2), activation='relu'))
-#model.add(Convolution2D(36,5,5, subsample=(2,2), activation='relu'))
-#model.add(Convolution2D(48,5,5, subsample=(2,2), activation='relu'))
+model.add(Convolution2D(48, 3, 3, border_mode='valid'))
+model.add(Activation('relu'))
+model.add(MaxPooling2D((2, 2), border_mode='valid'))
+
+model.add(Convolution2D(24, 5, 5, border_mode='valid'))
+model.add(Activation('relu'))
+model.add(MaxPooling2D((2, 2), border_mode='valid'))
 
 # 2 3x3 Convolutional Layers
-#model.add(Convolution2D(64,3,3, activation='relu'))
-#model.add(Convolution2D(64,3,3, activation='relu'))
 
 # Flatten Layer
 model.add(Flatten())
 
 # Fully-connected layer
-#model.add(Dense(100))
-#model.add(Dense(50))
-#model.add(Dense(10))
+model.add(Dense(100))
+model.add(Activation('relu'))
+model.add(Dense(50))
+model.add(Activation('relu'))
+model.add(Dense(10))
+model.add(Activation('relu'))
 model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam') # loss - mean squared error - mean absolute error
 
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=1)
 
 model.save('model.h5')
